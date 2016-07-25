@@ -20,10 +20,11 @@ using Windows.UI.Popups;
 using System.Threading;
 using System.Threading.Tasks;
 using PartyLight.Models.Main;
+using Windows.UI.StartScreen;
+using System.Diagnostics;
 
 namespace PartyLight
 {
-
 
     public sealed partial class MainPage : Page
     {
@@ -31,6 +32,9 @@ namespace PartyLight
         private static ApplicationDataContainer Settings = ApplicationData.Current.LocalSettings;
         private MainView model;
         private bool numLEDsChanged = true;
+
+        public const string secondaryTileId = "PowerSecondaryTile";
+        private const string secondaryTileParam = "p_toggle";
 
         public MainPage()
         {
@@ -63,6 +67,11 @@ namespace PartyLight
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if(e.Parameter.ToString().Contains(secondaryTileParam))
+            {
+                AppBarButtonPower_Click(this, null);
+                Application.Current.Exit();
+            }
         }
 
         private void AppBarButtonSettings_Click(object sender, RoutedEventArgs e)
@@ -107,6 +116,23 @@ namespace PartyLight
                 }
             }
             catch (Exception) { }
+        }
+
+        private async void AppBarButtonPinUnPin_Click(object sender, RoutedEventArgs e)
+        {
+            if (!SecondaryTile.Exists(MainPage.secondaryTileId))
+            {
+                Uri square150x150Logo = new Uri("ms-appx:///Assets/square150x150Tile.png");
+                string tileActivationArguments = secondaryTileParam;
+                string displayName = "Toggle Party Light";
+                TileSize newTileDesiredSize = TileSize.Square150x150;
+                SecondaryTile secondaryTile = new SecondaryTile(MainPage.secondaryTileId, displayName, tileActivationArguments, square150x150Logo, newTileDesiredSize);
+                Uri square30x30Logo = new Uri("ms-appx:///Assets/square30x30Tile.png");
+                secondaryTile.VisualElements.Square30x30Logo = new Uri("ms-appx:///Assets/square30x30Tile.png");
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                secondaryTile.VisualElements.ForegroundText = ForegroundText.Dark;
+                await secondaryTile.RequestCreateAsync();
+            }
         }
 
     }
