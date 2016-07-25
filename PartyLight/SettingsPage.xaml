@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="PartyLight.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PartyLight"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:model="using:PartyLight.Models.Main"
+    d:DataContext="{d:DesignInstance Type=model:MainView, IsDesignTimeCreatable=True}">
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="PARTYLIGHT" Margin="12,0" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="Settings" Margin="9,-7,0,0" Style="{StaticResource HeaderTextBlockStyle}" />
+        </StackPanel>
+
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Server address:" VerticalAlignment="Top" Style="{StaticResource BodyTextBlockStyle}" Margin="10,10,0,0"/>
+            <TextBox Text="{Binding Address, Mode=TwoWay}" Margin="10,39,10,0" TextWrapping="Wrap"  VerticalAlignment="Top" />
+        </Grid>
+
+    </Grid>
+</Page>

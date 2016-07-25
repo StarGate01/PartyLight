@@ -1,0 +1,81 @@
+﻿<Page
+    x:Class="PartyLight.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PartyLight"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:model="using:PartyLight.Models.Main"
+    xmlns:coverters="using:PartyLight.Models.Main.Converters"
+    d:DataContext="{d:DesignInstance Type=model:MainView, IsDesignTimeCreatable=True}">
+
+    <Page.Resources>
+        <coverters:ModeToEnabledConverter x:Key="ModeToEnabledConverter1" />
+        <coverters:ModeToIconConverter x:Key="ModeToIconConverter1" />
+        <coverters:ModeToNameConverter x:Key="ModeToNameConverter1" />
+    </Page.Resources>
+
+    <Page.BottomAppBar>
+        <CommandBar IsSticky="True" x:Name="appBar">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="AppBarButtonApply" Icon="Upload" IsCompact="False" Label="Apply" Click="AppBarButtonApply_Click" />
+                <AppBarButton x:Name="AppBarButtonPower" IsCompact="False" Label="Power" Click="AppBarButtonPower_Click">
+                    <AppBarButton.Icon>
+                        <BitmapIcon UriSource="Assets/appbar.power.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="AppBarButtonMode" Click="AppBarButtonMode_Click" IsCompact="False" Label="{Binding ModeIndex, Converter={StaticResource ModeToNameConverter1}}">
+                    <AppBarButton.Icon>
+                        <SymbolIcon Symbol="{Binding ModeIndex, Converter={StaticResource ModeToIconConverter1}}" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="AppBarButtonSettings" IsCompact="False" Label="Settings" Click="AppBarButtonSettings_Click" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="PARTYLIGHT" Margin="12,0" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="Party Light" Margin="9,-7,0,0" Style="{StaticResource HeaderTextBlockStyle}" />
+        </StackPanel>
+
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Slider Grid.Row="0" IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Value="{Binding Red, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Center" Margin="0" Background="#FF1F1F1F" Foreground="Red" Maximum="255" Orientation="Vertical" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Style="{StaticResource BigSliderStyle}"/>
+            <Slider Grid.Row="0" IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Value="{Binding Green, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Center" Margin="0" Background="#FF1F1F1F" Foreground="Green" Maximum="255" Orientation="Vertical" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Style="{StaticResource BigSliderStyle}"/>
+            <Slider Grid.Row="0" IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Value="{Binding Blue, Mode=TwoWay}" Grid.Column="2" HorizontalAlignment="Center" Margin="0" Background="#FF1F1F1F" Foreground="Blue" Maximum="255" Orientation="Vertical" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Style="{StaticResource BigSliderStyle}"/>
+
+            <TextBox IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Text="{Binding Red, Mode=TwoWay}" Grid.Column="0" Margin="0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Stretch" InputScope="Number" TextAlignment="Center" BorderBrush="{x:Null}" Background="{ThemeResource PhoneBackgroundBrush}" Style="{StaticResource DarkTextBoxStyle}" Foreground="#FFE4E4E4"/>
+            <TextBox IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Text="{Binding Green, Mode=TwoWay}" Grid.Column="1" Margin="0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Stretch" InputScope="Number" TextAlignment="Center" BorderBrush="{x:Null}" Background="{ThemeResource PhoneBackgroundBrush}" Style="{StaticResource DarkTextBoxStyle}" Foreground="#FFE4E4E4"/>
+            <TextBox IsEnabled="{Binding ModeIndex, Converter={StaticResource ModeToEnabledConverter1}}" Text="{Binding Blue, Mode=TwoWay}" Grid.Column="2" Margin="0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Stretch" InputScope="Number" TextAlignment="Center" BorderBrush="{x:Null}" Background="{ThemeResource PhoneBackgroundBrush}" Style="{StaticResource DarkTextBoxStyle}" Foreground="#FFE4E4E4"/>
+
+            <Slider Value="{Binding NumLEDs, Mode=TwoWay}" Grid.Row="4" Grid.ColumnSpan="2" x:Name="sliderNumLEDs"  Margin="0" VerticalAlignment="Top" Maximum="60" Foreground="#FFD4D4D4" Grid.RowSpan="2"/>
+            <TextBox Text="{Binding NumLEDs, Mode=TwoWay}" Grid.Column="2" Margin="0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Stretch" InputScope="Number" TextAlignment="Center" BorderBrush="{x:Null}" Background="{ThemeResource PhoneBackgroundBrush}" Style="{StaticResource DarkTextBoxStyle}" Foreground="#FFE4E4E4"/>
+
+        </Grid>
+
+    </Grid>
+</Page>
