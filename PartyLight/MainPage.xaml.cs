@@ -30,17 +30,14 @@ namespace PartyLight
     {
 
         private static ApplicationDataContainer Settings = ApplicationData.Current.LocalSettings;
-        private MainView model;
         private bool numLEDsChanged = true;
-
-        public const string secondaryTileId = "PowerSecondaryTile";
-        private const string secondaryTileParam = "p_toggle";
+        private MainView model;
 
         public MainPage()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
-            model = new MainView();
+            model = ((App)App.Current).Model;
             DataContext = model;
             model.PropertyChanged += Model_PropertyChanged;
         }
@@ -65,15 +62,6 @@ namespace PartyLight
             }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if(e.Parameter.ToString().Contains(secondaryTileParam))
-            {
-                AppBarButtonPower_Click(this, null);
-                Application.Current.Exit();
-            }
-        }
-
         private void AppBarButtonSettings_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SettingsPage), model);
@@ -83,9 +71,7 @@ namespace PartyLight
         {
             try
             {
-                WebRequest request = WebRequest.Create("http://" + model.Address + "/args.lua?submit=1&mode=power&power=toggle");
-                request.Headers["Cache-Control"] = "no-cache";
-                await request.GetResponseAsync();
+                await Api.Toggle(model);
             }
             catch (Exception) { }
         }
@@ -120,13 +106,13 @@ namespace PartyLight
 
         private async void AppBarButtonPinUnPin_Click(object sender, RoutedEventArgs e)
         {
-            if (!SecondaryTile.Exists(MainPage.secondaryTileId))
+            if (!SecondaryTile.Exists(Api.secondaryTileId))
             {
                 Uri square150x150Logo = new Uri("ms-appx:///Assets/square150x150Tile.png");
-                string tileActivationArguments = secondaryTileParam;
+                string tileActivationArguments = Api.secondaryTileParam;
                 string displayName = "Toggle Party Light";
                 TileSize newTileDesiredSize = TileSize.Square150x150;
-                SecondaryTile secondaryTile = new SecondaryTile(MainPage.secondaryTileId, displayName, tileActivationArguments, square150x150Logo, newTileDesiredSize);
+                SecondaryTile secondaryTile = new SecondaryTile(Api.secondaryTileId, displayName, tileActivationArguments, square150x150Logo, newTileDesiredSize);
                 Uri square30x30Logo = new Uri("ms-appx:///Assets/square30x30Tile.png");
                 secondaryTile.VisualElements.Square30x30Logo = new Uri("ms-appx:///Assets/square30x30Tile.png");
                 secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using PartyLight.Models.Main;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -23,14 +25,16 @@ namespace PartyLight
     {
 
         private TransitionCollection transitions;
+        public MainView Model;
 
         public App()
         {
+            Model = new MainView();
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -38,6 +42,16 @@ namespace PartyLight
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            if (e.Arguments.Contains(Api.secondaryTileParam))
+            {
+                try
+                {
+                    await Api.Toggle(Model);
+                }
+                catch (Exception) { }
+                Application.Current.Exit();
+            }
+
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame == null)
             {
